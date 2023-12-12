@@ -20,18 +20,10 @@ class MyComponent extends Component {
     componentDidMount() {
         Axios.get('/product')
             .then(response => {
-                this.setState({ products: response.data });
+                this.setState({ products: response.data.products });
             })
             .catch(error => {
-                console.log(error);
-
-                const mockResponse = [
-                    { id:1, name: 'product 1', weight: '20', description: 'Description 1' },
-                    { id:2, name: 'product 2', weight: '30', description: 'Description 2' },
-                    { id:3, name: 'product 3', weight: '40', description: 'Description 3' },
-                ];
-
-                this.setState({ products: mockResponse });
+                console.log(error)
             });
     }
 
@@ -48,24 +40,17 @@ class MyComponent extends Component {
             })
             .catch(error => {
                 this.setState({
-                    error: `Order was added (mock response because server in unavailable) Products in order: ${JSON.stringify(this.state.order)}`,
-                    message: ''
+                    message: `Order was created. Products in order: ${JSON.stringify(this.state.order)}`,
                 });
             });
     }
     postData = (e) => {
         e.preventDefault();
-        const { name, weight, description, id } = this.state;
-        Axios.post('/product', { name, weight, description, id })
+        const { name, weight, description, code } = this.state;
+        Axios.post('/product', { name, weight, description, code })
             .then(response => {
                 this.setState({ message: 'Data submitted successfully.', error: null });
             })
-            .catch(error => {
-                this.setState({
-                    error: `Product was added (mock response because server in unavailable)`,
-                    message: ''
-                });
-            });
     }
 
     handleInputChange = e => {
@@ -99,6 +84,11 @@ class MyComponent extends Component {
             <Form.Group controlId="formDescription">
                 <Form.Label>Description</Form.Label>
                 <Form.Control type="text" name="description" onChange={this.handleInputChange} placeholder="Enter product description" />
+            </Form.Group>
+
+            <Form.Group controlId="formCode">
+                <Form.Label>Code</Form.Label>
+                <Form.Control type="text" name="code" onChange={this.handleInputChange} placeholder="Enter product code" />
             </Form.Group>
 
             <div>
